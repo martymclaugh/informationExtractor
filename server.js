@@ -4,7 +4,8 @@ var cheerio = require('cheerio');
 var app = express();
 
 app.get('/scrape/:movieId', function(req, res){
-  console.log(req.params.movieId);
+  var movieId = req.params.movieId;
+  var url = 'http://www.imdb.com/title/'+ movieId + '/ratings';
   // scrape url
 
   // recieve the response
