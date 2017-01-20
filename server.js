@@ -17,12 +17,16 @@ app.get('/scrape/:movieId', function(req, res){
       // traverse to find ratings node
       ratings = $('#tn15content').text()
       title = $('.main').text()
+      // set data to obj to send back
+      json.title = title;
       // reformat the ratings to readable json
+      json.ratings = parseResponse(ratings)
     }else {
       console.log(error.message)
     }
   })
   // send json back
+  res.send(json)
 })
 function parseResponse(data){
   data = data.split('See user ratings report for:')[1].split('Related Links')[0];
