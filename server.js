@@ -3,11 +3,17 @@ var request = require('request');
 var cheerio = require('cheerio');
 var app = express();
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 app.get('/scrape/:movieId', function(req, res){
   var movieId = req.params.movieId;
   var url = 'http://www.imdb.com/title/'+ movieId + '/ratings';
   // scrape url
-  request(url, function(error, response, hmtl){
+  request(url, function(error, response, html){
     if(!error){
       // recieve the response
       // load with cheerio
@@ -21,12 +27,12 @@ app.get('/scrape/:movieId', function(req, res){
       json.title = title;
       // reformat the ratings to readable json
       json.ratings = parseResponse(ratings)
+      // send json back
+      res.send(json)
     }else {
       console.log(error.message)
     }
   })
-  // send json back
-  res.send(json)
 })
 function parseResponse(data){
   data = data.split('See user ratings report for:')[1].split('Related Links')[0];
