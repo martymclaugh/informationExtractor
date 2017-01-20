@@ -55,6 +55,6 @@ function parseResponse(data){
 }
 
 app.listen(process.env.PORT || '8081');
-console.log('Scraping on port 8081');
+console.log('Scraping on port ' process.env.PORT);
 
 module.exports = app
