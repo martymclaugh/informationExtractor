@@ -7,11 +7,21 @@ app.get('/scrape/:movieId', function(req, res){
   var movieId = req.params.movieId;
   var url = 'http://www.imdb.com/title/'+ movieId + '/ratings';
   // scrape url
-
-  // recieve the response
-  // load with cheerio
-  // traverse to find ratings node
-  // reformat the ratings to readable json
+  request(url, function(error, response, hmtl){
+    if(!error){
+      // recieve the response
+      // load with cheerio
+      var $ = cheerio.load(html);
+      var title, release;
+      var json = {};
+      // traverse to find ratings node
+      ratings = $('#tn15content').text()
+      title = $('.main').text()
+      // reformat the ratings to readable json
+    }else {
+      console.log(error.message)
+    }
+  })
   // send json back
 })
 function parseResponse(data){
