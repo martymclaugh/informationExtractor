@@ -40,23 +40,48 @@ function parseResponse(data){
   data.split('\n').forEach(function(line){
     newData.push(line.replace(/\s+/g,' ').trim());
   })
-  newData = newData.filter(function(n){ return n !== '' && n !== 'Votes' && n !== 'Average'});
-  output = []
-  newData.forEach(function(line){
-    let rating, amount, gender;
+  genderData = newData.filter(function(n){
+    let firstN = n.split(' ')[0]
+    return n !== '' && n !== 'Votes' && n !== 'Average' && firstN !== 'IMDb' && firstN !== 'Top' && firstN !== 'US' && firstN !== 'Non-US'
+  });
+  totalData = newData.filter(function(n){
+    return n !== '' && n !== 'Votes' && n !== 'Average'
+  });
+  var output = []
+  totalData.splice(2, totalData.length - 7)
+
+  genderData.forEach(function(line){
+    let rating, amount, title;
     var arr = line.split(' ');
     var len = arr.length;
-    rating = arr.pop();
-    amount = arr.pop();
-    if(arr[0] === 'Males' || arr[0] === 'Females'){
-      who = arr.shift()
-    } else {
-      who = arr.join(' ')
-    }
-    demographic = arr.join(' ')
-    output.push({who, demographic, rating, amount})
+    rating = parseFloat(arr.pop());
+    amount = parseInt(arr.pop());
+    title = arr.join(' ')
+    output.push({title, rating, amount})
   })
-  return output
+  newOutput = [
+    {
+      name: 'Total',
+      males: output[0].rating,
+      females: output[1].rating,
+      average: parseFloat(((output[0].rating + output[1].rating) / 2).toFixed(2)),
+      amount: output[0].amount + output[1].amount
+    }
+  ]
+  output = output.slice(2, output.length)
+  console.log(output)
+  for (var i = 0; i < output.length - 2; i +=3 ){
+    let obj = {
+      name: output[i].title,
+      males: output[i+1].rating,
+      females: output[i+2].rating,
+      average: parseFloat(((output[i+1].rating + output[i+2].rating) / 2).toFixed(2)),
+      amount: output[i].amount
+    }
+    newOutput.push(obj)
+  }
+  console.log(newOutput)
+  return newOutput
 }
 
 app.listen(process.env.PORT || '8081');
