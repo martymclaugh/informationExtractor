@@ -43,13 +43,18 @@ function parseResponse(data){
   newData = newData.filter(function(n){ return n !== '' && n !== 'Votes' && n !== 'Average'});
   output = []
   newData.forEach(function(line){
-    let rating, amount;
+    let rating, amount, gender;
     var arr = line.split(' ');
     var len = arr.length;
     rating = arr.pop();
     amount = arr.pop();
-    who = arr.join(' ')
-    output.push({who, rating, amount})
+    if(arr[0] === 'Males' || arr[0] === 'Females'){
+      who = arr.shift()
+    } else {
+      who = arr.join(' ')
+    }
+    demographic = arr.join(' ')
+    output.push({who, demographic, rating, amount})
   })
   return output
 }
